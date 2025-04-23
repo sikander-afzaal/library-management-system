@@ -168,5 +168,34 @@ def return_book():
         return jsonify({'error': 'Failed to borrow book, please try again later.'}), 500
 
 
+@app.route('/api/clear', methods=['DELETE'])
+def clear_all():
+    try:
+        # Establish a new database connection
+        conn = get_db_connection()
+
+        # Use RealDictCursor to get column names with the result
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+        # Clear all records from the borrowed table
+        cursor.execute('''
+    TRUNCATE TABLE borrowed;
+''')
+
+        # Commit the transaction
+        conn.commit()
+
+        # Close the connection
+        cursor.close()
+        conn.close()
+
+        return jsonify({'message': 'All records cleared successfully!'}), 200
+
+    except Exception as e:
+        # Log the exception for debugging
+        print(f"Exception: {e}")
+        return jsonify({'error': 'Failed to clear records, please try again later.'}), 500
+
+
 if __name__ == '__main__':
     app.run(debug=True)

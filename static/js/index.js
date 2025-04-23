@@ -1,8 +1,10 @@
+const BASE_URL = "http://127.0.0.1:5000/api";
+
 // Function to fetch all books from the API
 async function fetchAllBooks() {
   try {
     // Make a GET request to the API endpoint
-    const response = await fetch("http://127.0.0.1:5000/api/books");
+    const response = await fetch(BASE_URL + "/books");
 
     // Check if the response status is OK (status code 200-299)
     if (!response.ok) {
@@ -98,13 +100,6 @@ window.onload = function () {
   loadBooks();
 };
 
-// // Retrieve borrowing data from LocalStorage
-// const borrowingData = JSON.parse(localStorage.getItem('borrowingData')) || {};
-
-// // Clear existing options
-// borrowBookSelect.innerHTML = '<option value="">Select a Book</option>';
-// returnBookSelect.innerHTML = '<option value="">Select a Book</option>';
-
 // Handle Borrow Form Submission
 document
   .getElementById("borrowForm")
@@ -124,7 +119,7 @@ document
       return;
     }
 
-    fetch("http://127.0.0.1:5000/api/borrow", {
+    fetch(BASE_URL + "/borrow", {
       method: "POST",
       body: JSON.stringify({
         book_id: bookId,
@@ -182,9 +177,23 @@ document
   });
 
 // // Clear borrowing data from localStorage
-// document.getElementById('clearDataBtn').addEventListener('click', function () {
-//     if (confirm('Are you sure you want to clear all borrowing data? This action cannot be undone.')) {
-//         localStorage.removeItem('borrowingData'); // Only remove borrowing data
-//         location.reload(); // Reload the page after clearing the data
-//     }
-// });
+document.querySelector("#clearDataBtn").addEventListener("click", async () => {
+  if (
+    confirm(
+      "Are you sure you want to clear all borrowing data? This action cannot be undone."
+    )
+  ) {
+    const res = await fetch(BASE_URL + "/clear", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (res.ok) {
+      alert("All borrowing data has been cleared.");
+      loadBooks();
+    } else {
+      alert("Failed to clear borrowing data. Please try again.");
+    }
+  }
+});
