@@ -83,13 +83,15 @@ loadBooks = async () => {
     if (!isBorrowed) {
       // Add book to Borrow dropdown
       const option = document.createElement("option");
-      option.value = id;
+      // option.value = id; //postgress
+      option.value = title; //neo4j
       option.textContent = `${id} - ${title}`;
       borrowBookSelect.appendChild(option);
     } else {
       // Add book to Return dropdown
       const returnOption = document.createElement("option");
-      returnOption.value = id;
+      // returnOption.value = id; //postgress
+      returnOption.value = title; //neo4j
       returnOption.textContent = `${id} - ${title}`;
       returnBookSelect.appendChild(returnOption);
     }
