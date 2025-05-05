@@ -54,10 +54,16 @@ loadBooks = async () => {
     const authorName = book["author_name"];
     const publisherName = book["publisher_name"];
     const genreName = book["genre_name"];
-    const bookState = book["state"] === null ? "Present" : book["state"];
+    const bookState =
+      book["state"] === null || book["state"] === undefined
+        ? "Present"
+        : book["state"];
     const borrowDate = formatDate(book["borrow_date"]);
     const returnDate = formatDate(book["return_date"]);
-    const customerName = book["customer_name"];
+    const customerName =
+      book["customer_name"] === null || book["customer_name"] === undefined
+        ? "Not Issued"
+        : book["customer_name"];
     const isBorrowed = bookState === "Borrowed";
 
     // Create table row for each book
@@ -83,15 +89,15 @@ loadBooks = async () => {
     if (!isBorrowed) {
       // Add book to Borrow dropdown
       const option = document.createElement("option");
-      // option.value = id; //postgress
-      option.value = title; //neo4j
+      option.value = id; //postgress
+      // option.value = title; //neo4j
       option.textContent = `${id} - ${title}`;
       borrowBookSelect.appendChild(option);
     } else {
       // Add book to Return dropdown
       const returnOption = document.createElement("option");
-      // returnOption.value = id; //postgress
-      returnOption.value = title; //neo4j
+      returnOption.value = id; //postgress
+      // returnOption.value = title; //neo4j
       returnOption.textContent = `${id} - ${title}`;
       returnBookSelect.appendChild(returnOption);
     }
